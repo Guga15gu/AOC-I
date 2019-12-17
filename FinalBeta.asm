@@ -3,19 +3,19 @@
 matriz: .space 1024
 minas: .asciiz "Digite o numero de minas: \n"
 vermelho:.word 0xFFFF0100
-espa�o123: .asciiz"\n"
-go: .asciiz "\nVoc� ativou uma mina! \n"
+espaço123: .asciiz"\n"
+go: .asciiz "\nVocê ativou uma mina! \n"
 stringL: .asciiz "Linha: \n"
 stringC: .asciiz "Coluna: \n"
-string3: .asciiz "Digite 0 para desistir, 1 para abrir casa, outro n�mero para colocar/tirar bandeira:\n"
+string3: .asciiz "Digite 0 para desistir, 1 para abrir casa, outro número para colocar/tirar bandeira:\n"
 stringBandeira: .asciiz "Bandeira: \n"
 stringCasa: .asciiz "Digite as coordenadas para abrir. \n"
 stringBan: .asciiz "Digite as coordenadas para a bandeira. \n"
-stringVit�ria: .asciiz "Parab�ns, voc� abriu todo o tabuleiro sem ativar uma mina! \n"
+stringVitória: .asciiz "Parabéns, você abriu todo o tabuleiro sem ativar uma mina! \n"
 .text
 la $s5, matriz
 li $s0, 0x10010000		# s0 = first Pixel of the screen
-addi $s1, $s0, 65024 		# s1 = última posição do bitmap?
+addi $s1, $s0, 65024 		# s1 = Ãºltima posiÃ§Ã£o do bitmap?
 move $a0, $s0			# argumento 1 = first Pixel of the screen
 jal desenhaGrade		# matriz[n][m] = n*16 + m
 
@@ -23,7 +23,7 @@ move $a0, $s5			# argumento a0 = matriz
 li $v0, 4			
 la $a0, minas			# "Digite o numero de minas: \n"
 syscall	
-li $v0, 5			# código 5 le inteiro
+li $v0, 5			# cÃ³digo 5 le inteiro
 syscall
 
 move $s2, $v0			# s2 = numero de minas
@@ -32,7 +32,7 @@ move $a0, $s2			# argumento a0 = numero de minas
 jal criaMatriz	
 jal loopCalculaV2
 
-la $a0, espa�o123
+la $a0, espaço123
 li $v0, 4			
 syscall
 
@@ -41,7 +41,7 @@ loopMenu:
 la $a0, matriz		
 jal printaMatriz
 
-li $v0, 4			# código 4 imprime string
+li $v0, 4			# cÃ³digo 4 imprime string
 la $a0, string3			# "0 para desistir, 1 para colocar/tirar bandeira, outro numero para escolhar:\n"
 syscall	
 li $v0, 5			# codigo 5 le inteiro
@@ -49,7 +49,7 @@ syscall
 beq $v0, $zero, fimmmm
 bne $v0, 1, setarBandeira
 
-li $v0, 4			# código 4 imprime string
+li $v0, 4			# cÃ³digo 4 imprime string
 la $a0, stringCasa
 syscall
 
@@ -67,11 +67,11 @@ syscall
 move $a2, $v0			# a2 = Coluna
 
 jal revelaCasa
-jal condi��oVit�ria
+jal condiçãoVitória
 j loopMenu
 
 setarBandeira:
-li $v0, 4			# código 4 imprime string
+li $v0, 4			# cÃ³digo 4 imprime string
 la $a0, stringBan
 syscall
 li $v0, 4			
@@ -106,21 +106,21 @@ jal drawPreto
 j loopMenu
 fimmmm:
 jal printaMatrizBitMap
-li $v0, 10			# código para encerrar
+li $v0, 10			# cÃ³digo para encerrar
 syscall				# chamada do encerramento
 
 
 #####################################################################################################
 
-condi��oVit�ria:		# s5 = matriz
+condiçãoVitória:		# s5 = matriz
 
-li $a0, 256			# n�mero de casas
+li $a0, 256			# número de casas
 li $v0, 256
 move $a2, $s5
-				# s2 = n�mero de minas
-				# vit�ria acontece quando casasTotais - casasAbertas = n�mero de minas
-				# 256 - (n�mero de -1) = s2
-and $a3, $zero, $zero		# a3 = 0 = n�mero de -1	
+				# s2 = número de minas
+				# vitória acontece quando casasTotais - casasAbertas = número de minas
+				# 256 - (número de -1) = s2
+and $a3, $zero, $zero		# a3 = 0 = número de -1	
 
 loopCV:
 lw $a1, 0($a2)		# t1 = casa[aleatoria]
@@ -135,19 +135,19 @@ j loopCV
 
 fimCV:
 sub $v0, $v0, $a3
-beq $v0, $s2, Vit�ria
+beq $v0, $s2, Vitória
 
 jr $ra
-Vit�ria:
-li $v0, 4			# c�digo 4 imprime string
-la $a0, stringVit�ria	
+Vitória:
+li $v0, 4			# código 4 imprime string
+la $a0, stringVitória	
 syscall
 j fimmmm
 #####################################################################################################
 
 setaNumero:			
 				# a1 = linha, a2 = coluna, a3 = numero
-				# -1, apenas coloca, se for -2 faz l�gica bandeira
+				# -1, apenas coloca, se for -2 faz lógica bandeira
 				# retorna v0 = 0, se retirou uma bandeira  1
 addi $sp,$sp, -4
 sw $ra, 0($sp)			# push ra
@@ -157,9 +157,9 @@ sw $a2, 0($sp)			# push a2
 addi $sp,$sp, -4
 sw $a1, 0($sp)			# push a1
 
-li $v0, 0			# retorna 1, se  n retirou uma bandeira, ent�o...
+li $v0, 0			# retorna 1, se  n retirou uma bandeira, então...
 
-la $v0, matriz			# t0 = endere�o base
+la $v0, matriz			# t0 = endereço base
 
 mul $a1, $a1, 64		# t1 = linha*64
 mul $a2, $a2, 4			# t2 = coluna*4
@@ -181,9 +181,9 @@ jr $ra
 
 SNBandeira:
 lw $a2, 0($v1)
-beq $a2, -1, fimSN		# N�o faz nada, pois casa j� aberta :)
+beq $a2, -1, fimSN		# Não faz nada, pois casa já aberta :)
 blt $a2, -1, tiraBandeira
-addi $a2, $a2, -11		# bandeira ir� diminuir -11 da casa
+addi $a2, $a2, -11		# bandeira irá diminuir -11 da casa
 sw $a2, 0($v1)			# armazena a bandeira
 
 j fimSN
@@ -213,7 +213,7 @@ sw $t3, 0($sp)			# push t3
 addi $sp,$sp, -4
 sw $t4, 0($sp)			# push t4
 
-la $t0, matriz			# t0 = endere�o base
+la $t0, matriz			# t0 = endereço base
 move $t1, $a1
 move $t2, $a2
 mul $t1, $t1, 64		# t1 = linha*64
@@ -223,20 +223,20 @@ add $t3, $t3, $t2		# t3 = base + linha*64 + COLUNA*4
 
 lw $t4, ($t3)			# carrega valor da casa
 beq $t4, 9, gameover		# game over
-beq $t4, 0, droga0		# recurs�o...
-				# se n�o... apenas printa n�mero
+beq $t4, 0, droga0		# recursão...
+				# se não... apenas printa número
 move $a0, $t3
 
 jal printCasa
 li $a3, -1
-jal setaNumero			# seta -1 na casa rec�m aberta
+jal setaNumero			# seta -1 na casa recém aberta
 j fimJogo
 
 droga0:
 move $a0, $t3
 jal printCasa
 li $a3, -1
-jal setaNumero			# seta -1 na casa rec�m aberta
+jal setaNumero			# seta -1 na casa recém aberta
 #########################################
 beq $a1, 0, LINE0		# LINE 0
 beq $a1, 15, LINE15		# LINE 15
@@ -327,7 +327,7 @@ r2hh:
 j ENDV2ok
 #**********************************************************
 COLUNA15:
-# s� sobrou LinhaPColuna15
+# só sobrou LinhaPColuna15
 lw $t4, -4($t3)			# t4 =  [l][c-1] 
 blt $t4, 0, w2aa
 
@@ -381,7 +381,7 @@ w2ee:
 j ENDV2ok
 #**********************************************************
 COLUNA0:
-# s� sobrou caso LinhaPCOLUNA0
+# só sobrou caso LinhaPCOLUNA0
 lw $t4, 4($t3)			# t4 =  [l][c+1] 
 blt $t4, 0, q2aa
 jal revelaCasa
@@ -705,14 +705,14 @@ la $a0, go			# argumento a0
 syscall	
 jal printaMatrizBitMap
 
-li $v0, 10			# código para encerrar
+li $v0, 10			# cÃ³digo para encerrar
 syscall				# chamada do encerramento
 #####################################################################################################
 
-converteMatrizToBitMap:		# recebe  endere�o $a0, retorna $v0 = linha, v1 = coluna
-				# retorna a0 endere�o bitmap
+converteMatrizToBitMap:		# recebe  endereço $a0, retorna $v0 = linha, v1 = coluna
+				# retorna a0 endereço bitmap
 				
-sub $a0, $a0, $s5		# endere�o M - endere�o base		
+sub $a0, $a0, $s5		# endereço M - endereço base		
 li $v0, 0			# linha
 li $v1, 0			# coluna
 				
@@ -738,7 +738,7 @@ add $a0, $a0, $s0
 jr $ra
 #####################################################################################################
 
-printCasa:			# recebe endere�o matriz em a0, BM em s0
+printCasa:			# recebe endereço matriz em a0, BM em s0
 
 addi $sp,$sp, -4
 sw $ra, 0($sp)			
@@ -760,7 +760,7 @@ sw $t4, 0($sp)
 
 lw $t2, 0($a0)			# t2 = valor = argumento
 
-jal converteMatrizToBitMap	# retorna em a0 = endere�o para o bitmap
+jal converteMatrizToBitMap	# retorna em a0 = endereço para o bitmap
 
 beq $t2, 0, dddraw0
 beq $t2, 1, dddraw1
@@ -773,7 +773,7 @@ beq $t2, 7, dddraw7
 beq $t2, 8, dddraw8
 beq $t2, 9, dddraw9
 beq $t2, -1, pilhaBM1		# caso for -1, n faz nada
-				# se n�o, � bandeira
+				# se não, é bandeira
 
 jal bandeira	
 j pilhaBM1	
@@ -828,21 +828,21 @@ addi $sp,$sp, 4			# restaura pilha
 jr $ra
 #####################################################################################################
 
-printaMatrizBitMap:		# recebe endere�o em s5, BM em s0
+printaMatrizBitMap:		# recebe endereço em s5, BM em s0
 
 addi $sp,$sp, -4
 sw $ra, 0($sp)			# push ra
 
-move $t0, $s5			# t0 = endere�o
+move $t0, $s5			# t0 = endereço
 li $t1, 0			# 0
 
 loopBMBP:
 lw $t2, 0($t0)			# a1 = valor = argumento
-move $a0, $t0			# endere�o matriz
+move $a0, $t0			# endereço matriz
 blt $t2, -2, bandeiraErr
 jal printCasa
 backBMDP:
-addi $t0, $t0, 4		# ++ endere�o
+addi $t0, $t0, 4		# ++ endereço
 addi $t1, $t1, 1		# ++ t1 = contador final
 bne $t1, 256,loopBMBP			# 16*16*4
 
@@ -857,7 +857,7 @@ j backBMDP
 #####################################################################################################
 
 calculaV2:			# a1 = linha, a2 = coluna
-la $t0, matriz			# t0 = endere�o base
+la $t0, matriz			# t0 = endereço base
 move $t1, $a1
 move $t2, $a2
 mul $t1, $t1, 64		# t1 = linha*64
@@ -866,7 +866,7 @@ add $t3, $t0, $t1		# $t3 = base + linha*64
 add $t3, $t3, $t2		# t3 = base + linha*64 + coluna*4
 
 lw $t7, ($t3)			# carrega casa desejada
-beq $t7, 9, fimV2		# � uma mina
+beq $t7, 9, fimV2		# é uma mina
 
 move $t4, $t0
 beq $t1, 0, linha0		# linha 0
@@ -910,7 +910,7 @@ r2h:
 j fimV2ok
 #**********************************************************
 coluna15:
-# s� sobrou LinhaPColuna15
+# só sobrou LinhaPColuna15
 lw $t4, -4($t3)			# t4 =  [l][c-1] 
 bne $t4, 9, w2a
 addi $t7, $t7, 1		# contador + 1
@@ -934,7 +934,7 @@ w2e:
 j fimV2ok
 #**********************************************************
 coluna0:
-# s� sobrou caso LinhaPcoluna0
+# só sobrou caso LinhaPcoluna0
 lw $t4, 4($t3)			# t4 =  [l][c+1] 
 bne $t4, 9, q2a
 addi $t7, $t7, 1		# contador + 1
@@ -1102,15 +1102,15 @@ addi $sp,$sp, 4			# restaura pilha
 jr $ra
 #####################################################################################################
 
-printaMatriz:			# recebe endere�o em a0
-move $v1, $a0			# t0 = endere�o
+printaMatriz:			# recebe endereço em a0
+move $v1, $a0			# t0 = endereço
 li $a1, 0			# 256
 li $a2, 0			# 16
 loopPM:
 lw $a0, 0($v1)			# a0 = valor = argumento
 li $v0, 1			# argumneto vo = 1 printa inteiro
 syscall
-addi $v1, $v1, 4		# ++ endere�o
+addi $v1, $v1, 4		# ++ endereço
 addi $a2, $a2, 1		# ++ t2 = contador linha
 addi $a1, $a1, 1		# ++ t1 = contador final
 beq $a2, 16, barranPM
@@ -1121,7 +1121,7 @@ PMsair:
 jr $ra
 
 barranPM:
-la $a0, espa�o123
+la $a0, espaço123
 li $v0, 4			# argumneto vo = 4 printa string
 syscall
 li $a2, 0
@@ -1130,10 +1130,10 @@ j voltaPM
 
 geraAleatorio:		# retorna v0 = numero entre 0 e 256*4
 
-li $v0, 42			# código 42 gera número aleatorio
+li $v0, 42			# cÃ³digo 42 gera nÃºmero aleatorio
 li $a0, 0			# argumento a0
 li $a1, 256		# argumento a1 = limite
-syscall			# a0 = número aleatório
+syscall			# a0 = nÃºmero aleatÃ³rio
 sll $a0, $a0, 2		# a0 * 4
 move $v0, $a0
 
@@ -1143,7 +1143,7 @@ jr $ra
 criaMatriz:		# void, argumento a0 = numero de minas
 
 move $a3, $a0		# t0 = numero de minas
-li $a2, 9		# código 100 = mina = t7
+li $a2, 9		# cÃ³digo 100 = mina = t7
 
 addi $sp,$sp, -4
 sw $ra, 0($sp)		# push ra
@@ -2006,9 +2006,9 @@ jr $ra
 pintaLinhaCasa:			# recebe first pixel em a0, e cor em a1
 				# 8 x 8 pixels, no caso 7x7, excluindo a grade
 				# posicao[m][n] =512*(n+1) + (m+1)*4	
-addi $a0, $a0, 512		# Próxima linha	(primeira linha é da grade)
+addi $a0, $a0, 512		# PrÃ³xima linha	(primeira linha Ã© da grade)
 	
-addi $a2, $a0, 28		# a2 = última posição da casa
+addi $a2, $a0, 28		# a2 = Ãºltima posiÃ§Ã£o da casa
 loopPLC:
 addi $a0, $a0, 4
 sw $a1, 0($a0)			# pinta branco
@@ -2032,7 +2032,7 @@ jal pintaLinha
 
 addi $t2, $0, 7			# t2 = 7
 llGrade:									
-addi $t0, $t0, 512		# 128 * 4 = 512	Próxima linha
+addi $t0, $t0, 512		# 128 * 4 = 512	PrÃ³xima linha
 move $a0, $t0			# a0 = first Pixel of the line 
 jal pintaColunaPorLinha
 
@@ -2042,7 +2042,7 @@ j llGrade
 
 foraGrade:
 beq $t0, $s1, fimDG		# a0 == last Pixel of the screen
-addi $t0, $t0, 512		# 128 * 4 = 512	Próxima linha
+addi $t0, $t0, 512		# 128 * 4 = 512	PrÃ³xima linha
 j loopGrade
 
 fimDG:
@@ -2053,11 +2053,11 @@ jr $ra
 
 pintaColunaPorLinha:		# recebe first pixel em a0
 lw $a1, vermelho		# a1 = vermelho
-addi $a2, $a0, 512		# a2 = última posição da linha
+addi $a2, $a0, 512		# a2 = Ãºltima posiÃ§Ã£o da linha
 
 loopPCPL:
 sw $a1, 0($a0)			# pinta vermelho
-addi $a0, $a0, 32		# pula para próxima coluna
+addi $a0, $a0, 32		# pula para prÃ³xima coluna
 beq $a0, $a2, fimPCPL
 j loopPCPL
 fimPCPL:
@@ -2067,7 +2067,7 @@ jr $ra
 
 pintaLinha:			# recebe first pixel em a0
 lw $a1, vermelho		# a1 = vermelho
-addi $a2, $a0, 512		# a2 = última posição da linha
+addi $a2, $a0, 512		# a2 = Ãºltima posiÃ§Ã£o da linha
 loopPL:
 sw $a1, 0($a0)			# pinta vermelho
 addi $a0, $a0, 4
